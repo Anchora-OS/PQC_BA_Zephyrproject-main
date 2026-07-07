@@ -1,0 +1,25 @@
+\section{Digital Artifacts and Repositories}
+The project ecosystem is intentionally decoupled into five distinct repositories:
+
+\begin{itemize}
+    \item \textbf{Main Zephyr Integration Hub (PQC\_BA\_Zephyrproject):} As the central hub, this repository contains the shared RTOS workspace, board definitions, and the build environment required to compile and flash the firmware.
+    \item \textbf{Target Environment / Cryptographic Submodules (FIPS20X\_Implementation):} Three independent Git sub-repositories containing the C/C++ firmware implementations of the evaluated algorithms.
+    \item \textbf{Python Testing Host Environment (PQC\_BA\_HostTestingFramework):} A decoupled Python host application that orchestrates test workflows, handles USB communication, and independently validates mathematical correctness.
+\end{itemize}
+
+This modular split allows for the independent benchmarking of each algorithm pair and decouples the embedded implementation from the host-side verification logic to avoid shared bugs. The cryptographic implementations are integrated behind a uniform Zephyr interface and organized into implementation pairs (consisting of one classical and one post-quantum algorithm per submodule). 
+
+\begin{itemize}
+    \item The active algorithm within a flashed pair is selectable at runtime.
+    \item The specific implementation pair to test is selected at build time via \texttt{west build} command options, allowing the target firmware to compile alternative algorithms without modifying the logic or repository structure.
+\end{itemize}
+
+The specific cryptographic submodules are:
+\begin{itemize}
+    \item \textbf{\href{https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS203_Implementation.git}{FIPS203\_Implementation}:} FIPS 203 (ML-KEM) and ECDH as a classical key-exchange baseline.
+    \item \textbf{\href{https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS204_Implementation.git}{FIPS204\_Implementation}:} FIPS 204 (ML-DSA) and ECDSA as a classical signature baseline.
+    \item \textbf{\href{https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS205_Implementation.git}{FIPS205\_Implementation}:} FIPS 205 (SLH-DSA) and RSA-PSS, which also serves as a classical signature baseline.
+\end{itemize}
+
+\subsection{Host-Side Framework}
+The host-side evaluation logic is contained within the \textbf{\href{https://github.zhaw.ch/PQC-on-Microcontrollers/PQC_BA_HostTestingFramework.git}{PQC\_BA\_HostTestingFramework}} repository.

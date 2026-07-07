@@ -1,0 +1,81 @@
+name: Test RandomShake CSPRNG
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      LLVM_VERSION: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install LLVM ${{ env.LLVM_VERSION }}
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          echo "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-${{ env.LLVM_VERSION }} main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update
+          sudo apt-get install -y clang-${{ env.LLVM_VERSION }} clang-tidy-${{ env.LLVM_VERSION }}
+
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_CXX_COMPILER=clang++-${{ env.LLVM_VERSION }}
+          -DCMAKE_BUILD_TYPE=Release
+          -DRANDOMSHAKE_BUILD_TESTS=ON
+          -DRANDOMSHAKE_BUILD_EXAMPLES=ON
+          -DRANDOMSHAKE_FETCH_DEPS=ON
+          -DCLANG_TIDY_EXE=clang-tidy-${{ env.LLVM_VERSION }}
+
+      - name: clang-tidy
+        run: cmake --build build --target tidy
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        os: [ ubuntu-latest ]
+        compiler: [g++, clang++]
+        sanitizer: [none, asan, ubsan]
+        build_type: [Debug, Release]
+        include:
+          - os: macos-latest
+            compiler: clang++
+            sanitizer: none
+            build_type: Release
+        exclude:
+          - sanitizer: none
+            build_type: Debug
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DRANDOMSHAKE_BUILD_TESTS=ON
+          -DRANDOMSHAKE_BUILD_EXAMPLES=ON
+          -DRANDOMSHAKE_FETCH_DEPS=ON
+          -DRANDOMSHAKE_ASAN=${{ matrix.sanitizer == 'asan' && 'ON' || 'OFF' }}
+          -DRANDOMSHAKE_UBSAN=${{ matrix.sanitizer == 'ubsan' && 'ON' || 'OFF' }}
+
+      - name: Build
+        run: cmake --build build -j
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure -j
+
+      - name: Run Examples
+        if: ${{ matrix.sanitizer == 'none' && matrix.build_type == 'Release' }}
+        run: |
+          for exe in build/csprng_*_example; do
+            ./$exe
+          done

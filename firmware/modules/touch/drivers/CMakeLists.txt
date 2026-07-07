@@ -1,0 +1,1 @@
+add_subdirectory_ifdef(CONFIG_INPUT_TSC2007 input)

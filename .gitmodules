@@ -1,0 +1,12 @@
+[submodule "FIPS203_Implementation"]
+	path = FIPS203_Implementation
+	url = https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS203_Implementation.git
+[submodule "firmware/git_submodules/FIPS203_Implementation"]
+	path = firmware/git_submodules/FIPS203_Implementation
+	url = https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS203_Implementation.git
+[submodule "firmware/git_submodules/FIPS204_Implementation"]
+	path = firmware/git_submodules/FIPS204_Implementation
+	url = https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS204_Implementation.git
+[submodule "firmware/git_submodules/FIPS205_Implementation"]
+	path = firmware/git_submodules/FIPS205_Implementation
+	url = https://github.zhaw.ch/PQC-on-Microcontrollers/FIPS205_Implementation.git

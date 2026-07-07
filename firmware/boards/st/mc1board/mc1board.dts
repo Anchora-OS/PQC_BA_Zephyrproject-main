@@ -1,0 +1,456 @@
+/*
+ * Copyright (c) 2023 STMicroelectronics
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <st/h5/stm32h573Xi.dtsi>
+#include <st/h5/stm32h573iikxq-pinctrl.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/memory-attr/memory-attr.h>
+#include <zephyr/dt-bindings/memory-attr/memory-attr-arm.h>
+#include <zephyr/dt-bindings/memory-controller/stm32-fmc-nor-psram.h>
+#include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
+/ {
+	model = "MC1 Board";
+	compatible = "zhaw,mc1board";
+
+	chosen {
+		zephyr,console = &uart4;
+		zephyr,shell-uart = &uart4;
+		zephyr,sram = &sram1;
+		zephyr,flash = &flash0;
+		//zephyr,code-partition = &slot0_partition; // TODO
+		zephyr,canbus = &fdcan1;
+		zephyr,display = &ili9341;
+	};
+
+	aliases {
+		watchdog0 = &iwdg;
+		volt-sensor0 = &vref;
+		volt-sensor1 = &vbat;
+		led0 = &led_0;
+        led1 = &led_1;
+        led2 = &led_2;
+        led3 = &led_3;
+        t0 = &button_0;
+        t1 = &button_1;
+        t2 = &button_2;
+        t3 = &button_3;
+        sw0 = &switch_0;
+        sw1 = &switch_1;
+        sw2 = &switch_2;
+        sw3 = &switch_3;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_0: led_0 {
+			gpios = <&gpiof 0 GPIO_ACTIVE_HIGH>;
+		};
+
+		led_1: led-1 {
+			gpios = <&gpiof 1 GPIO_ACTIVE_HIGH>;
+		};
+
+		led_2: led-2 {
+			gpios = <&gpiof 2 GPIO_ACTIVE_HIGH>;
+		};
+
+		led_3: led-3 {
+			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+
+		button_0: button-0 {
+			gpios = <&gpiof 4 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_0>;
+		};
+
+		button_1: button-1 {
+			gpios = <&gpiof 5 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_1>;
+		};
+
+		button_2: button-2 {
+			gpios = <&gpiof 10 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_2>;
+		};
+
+		button_3: button-3 {
+			gpios = <&gpiof 11 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_3>;
+		};
+
+		switch_0: switch-0 {
+			gpios = <&gpiof 12 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_4>;
+		};
+
+		switch_1: switch-1 {
+			gpios = <&gpiof 13 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_5>;
+		};
+
+		switch_2: switch-2 {
+			gpios = <&gpiof 14 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_6>;
+		};
+
+		switch_3: switch-3 {
+			gpios = <&gpiof 15 GPIO_ACTIVE_HIGH>;
+			zephyr,code = <INPUT_KEY_7>;
+		};
+	};
+
+	headers {
+		compatible = "zhaw,mc1board";
+
+		header_j5 {
+			pd0: pd0 { gpios = <&gpiod 0 GPIO_ACTIVE_HIGH>; };
+			pd1: pd1 { gpios = <&gpiod 1 GPIO_ACTIVE_HIGH>; };
+			pd2: pd2 { gpios = <&gpiod 2 GPIO_ACTIVE_HIGH>; };
+			pd3: pd3 { gpios = <&gpiod 3 GPIO_ACTIVE_HIGH>; };
+			pd4: pd4 { gpios = <&gpiod 4 GPIO_ACTIVE_HIGH>; };
+			pd5: pd5 { gpios = <&gpiod 5 GPIO_ACTIVE_HIGH>; };
+			pd6: pd6 { gpios = <&gpiod 6 GPIO_ACTIVE_HIGH>; };
+			pd7: pd7 { gpios = <&gpiod 7 GPIO_ACTIVE_HIGH>; };
+			pd8: pd8 { gpios = <&gpiod 8 GPIO_ACTIVE_HIGH>; };
+			pd9: pd9 { gpios = <&gpiod 9 GPIO_ACTIVE_HIGH>; };
+			pd10: pd10 { gpios = <&gpiod 10 GPIO_ACTIVE_HIGH>; };
+			pd11: pd11 { gpios = <&gpiod 11 GPIO_ACTIVE_HIGH>; };
+		};
+
+		header_j6 {
+			pe4: pe4 { gpios = <&gpioe 4 GPIO_ACTIVE_HIGH>; };
+			pe5: pe5 { gpios = <&gpioe 5 GPIO_ACTIVE_HIGH>; };
+			pe6: pe6 { gpios = <&gpioe 6 GPIO_ACTIVE_HIGH>; };
+			pe7: pe7 { gpios = <&gpioe 7 GPIO_ACTIVE_HIGH>; };
+			pe8: pe8 { gpios = <&gpioe 8 GPIO_ACTIVE_HIGH>; };
+			pe9: pe9 { gpios = <&gpioe 9 GPIO_ACTIVE_HIGH>; };
+			pe10: pe10 { gpios = <&gpioe 10 GPIO_ACTIVE_HIGH>; };
+			pe11: pe11 { gpios = <&gpioe 11 GPIO_ACTIVE_HIGH>; };
+			pe12: pe12 { gpios = <&gpioe 12 GPIO_ACTIVE_HIGH>; };
+			pe13: pe13 { gpios = <&gpioe 13 GPIO_ACTIVE_HIGH>; };
+			pe14: pe14 { gpios = <&gpioe 14 GPIO_ACTIVE_HIGH>; };
+			pe15: pe15 { gpios = <&gpioe 15 GPIO_ACTIVE_HIGH>; };
+
+		};
+
+		header_j7 {
+			pg0: pg0 { gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>; };
+			pg1: pg1 { gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>; };
+			pg2: pg2 { gpios = <&gpiog 2 GPIO_ACTIVE_HIGH>; };
+			pg3: pg3 { gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>; };
+			pg4: pg4 { gpios = <&gpiog 4 GPIO_ACTIVE_HIGH>; };
+			pg5: pg5 { gpios = <&gpiog 5 GPIO_ACTIVE_HIGH>; };
+			pg6: pg6 { gpios = <&gpiog 6 GPIO_ACTIVE_HIGH>; };
+			pg7: pg7 { gpios = <&gpiog 7 GPIO_ACTIVE_HIGH>; };
+			pg8: pg8 { gpios = <&gpiog 8 GPIO_ACTIVE_HIGH>; };
+			pg9: pg9 { gpios = <&gpiog 9 GPIO_ACTIVE_HIGH>; };
+			pg10: pg10 { gpios = <&gpiog 10 GPIO_ACTIVE_HIGH>; };
+			pg14: pg14 { gpios = <&gpiog 14 GPIO_ACTIVE_HIGH>; };
+		};
+	};
+
+	lcd_bl_ctrl {
+		compatible = "regulator-fixed";
+		regulator-name = "LCD Backlight Dirver";
+		enable-gpios = <&gpioc 2 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
+	};
+
+	mipi_dbi {
+		compatible = "zephyr,mipi-dbi-spi";
+		dc-gpios = <&gpiof 6 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpiob 4 GPIO_ACTIVE_LOW>;
+		spi-dev = <&spi5>;
+		write-only;
+		#address-cells = <0x1>;
+		#size-cells = <0x0>;
+
+		ili9341: ili9341@0 {
+			compatible = "ilitek,ili9341";
+			mipi-max-frequency = <0x989680>; //<0x55d4a8>;
+			reg = <0x0>;
+			width = <240>;
+			height = <320>;
+			rotation = <180>;
+			mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
+			pixel-format = <0x0>; // This line fixed the missing pixels
+			//pgamctrl = [0F 29 24 0c 0e 09 4e 78 3c 09 13 05 17 11 00];
+			//ngamctrl = [00 16 1b 04 11 07 31 33 42 05 0c 0a 28 2f 0f];
+		};
+	};
+
+	lvgl_pointer {
+		compatible = "zephyr,lvgl-pointer-input";
+        input = <&tsc2007>;
+		display = <&ili9341>;
+		invert-y;
+	};
+};
+
+&fmc {
+
+};
+
+&clk_hsi48 {
+	status = "okay";
+};
+
+&clk_lse {
+	status = "okay";
+};
+
+&clk_hse {
+	clock-frequency = <DT_FREQ_M(25)>;
+	status = "okay";
+};
+
+&pll {
+	div-m = <5>;
+	mul-n = <96>;
+	div-p = <2>;
+	div-q = <10>; // old value 6
+	div-r = <2>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <DT_FREQ_M(240)>;
+	ahb-prescaler = <1>;
+	apb1-prescaler = <2>;
+	apb2-prescaler = <1>;
+	apb3-prescaler = <1>;
+};
+
+&i2c2 {
+	pinctrl-0 = <&i2c2_scl_pb10 &i2c2_sda_pb12>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	status = "okay";
+};
+
+&i2c4 {
+	pinctrl-0 = <&i2c4_scl_pb6 &i2c4_sda_pb7>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_FAST>;
+	status = "okay";
+
+    tsc2007: tsc2007@4b {
+        compatible = "ti,tsc2007";
+        status = "okay";
+        reg = <0x4b>;
+        int-gpios = <&gpiob 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+        screen-width = <240>;
+        screen-height = <320>;
+        raw-x-min = <0>;
+        raw-y-min = <0>;
+        raw-x-max = <4095>;
+        raw-y-max = <4095>;
+    };
+};
+
+&uart4 {
+	pinctrl-0 = <&uart4_rx_pb8 &uart4_tx_pb9>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	single-wire;
+	status = "okay";
+};
+
+&usart1 {
+	pinctrl-0 = <&usart1_tx_pa9 &usart1_rx_pa10>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&usart3 {
+	pinctrl-0 = <&usart3_tx_pb10 &usart3_rx_pb11>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "disabled";
+};
+
+&timers2 {
+	st,prescaler = <10>;
+	status = "okay";
+
+	pwm2: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim2_ch4_pa3>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers3 {
+	st,prescaler = <10000>;
+	status = "disabled";
+
+	pwm3: pwm {
+		status = "disabled";
+		pinctrl-0 = <&tim3_ch2_pb5>;
+		pinctrl-names = "default";
+	};
+};
+/*
+&timers12 {
+	st,prescaler = <100>;
+	status = "okay";
+
+	pwm12: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim12_ch2_pb15>;
+		pinctrl-names = "default";
+	};
+};
+*/
+// advanced encryption standard
+&aes {
+	status = "okay";
+};
+
+// random number generation
+&rng {
+	status = "okay";
+};
+
+// media access control
+&mac {
+	status = "okay";
+	pinctrl-0 = <&eth_rxd0_pc4
+		     &eth_rxd1_pc5
+		     &eth_ref_clk_pa1
+		     &eth_crs_dv_pa7
+		     &eth_tx_en_pg11
+		     &eth_txd0_pg13
+		     &eth_txd1_pg12>;
+	pinctrl-names = "default";
+	phy-connection-type = "rmii";
+	phy-handle = <&eth_phy>;
+};
+
+// management data input/output
+&mdio {
+	status = "okay";
+	pinctrl-0 = <&eth_mdio_pa2 &eth_mdc_pc1>;
+	pinctrl-names = "default";
+
+	eth_phy: ethernet-phy@0 {
+		compatible = "ethernet-phy";
+		reg = <0x00>;
+	};
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Set the partitions with first MB to make use of the whole Bank1 */
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x00000000 DT_SIZE_K(64)>;
+		};
+
+		/* Set 64KB of storage at the end of Bank1 */
+		storage_partition: partition@f0000 {
+			label = "storage";
+			reg = <0x000f0000 DT_SIZE_K(64)>;
+		};
+	};
+};
+
+&rtc {
+	clocks = <&rcc STM32_CLOCK_BUS_APB3 0x00200000>,
+		 <&rcc STM32_SRC_LSE RTC_SEL(1)>;
+	status = "okay";
+};
+
+&iwdg {
+	status = "okay";
+};
+
+&gpdma1 {
+	status = "okay";
+};
+
+&gpdma2 {
+	status = "okay";
+};
+
+&spi1 {
+	status = "disabled";
+	pinctrl-0 = <&spi1_sck_pa5
+		     &spi1_mosi_pb5>;
+	pinctrl-names = "default";
+};
+
+&spi2 {
+	status = "okay";
+	pinctrl-0 = <&spi2_mosi_pb15>;
+	pinctrl-names = "default";
+	dmas = <&gpdma1 0 9 0x10440>, <&gpdma1 1 8 0x10480>;
+	dma-names = "tx", "rx";
+};
+
+&spi5 {
+	status = "okay";
+	pinctrl-0 = <&spi5_sck_pf7
+		     &spi5_miso_pf8 
+		     &spi5_mosi_pf9>;
+	cs-gpios = <&gpioc 3 GPIO_ACTIVE_LOW>;
+	pinctrl-names = "default";
+};
+
+&spi6 {
+	status = "disabled";
+	pinctrl-0 = <&spi6_sck_pa5
+		     &spi6_miso_pa6
+		     &spi6_mosi_pb5>;
+	pinctrl-names = "default";
+};
+
+&sdmmc1 {
+	compatible = "st,stm32-sdmmc";
+	pinctrl-0 = <&sdmmc1_d0_pc8 &sdmmc1_d1_pc9
+		     &sdmmc1_d2_pc10 &sdmmc1_d3_pc11
+		     &sdmmc1_ck_pc12 &sdmmc1_cmd_pb2>;
+	pinctrl-names = "default";
+	// cd-gpios = <&gpioh 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+	disk-name = "SD";
+	status = "okay";
+};
+
+zephyr_udc0: &usb {
+	pinctrl-0 = <&usb_dm_pa11 &usb_dp_pa12>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&die_temp {
+	status = "okay";
+};
+
+&digi_die_temp {
+	status = "okay";
+};
+
+&vref {
+	status = "okay";
+};
+
+&vbat {
+	status = "okay";
+};
+
